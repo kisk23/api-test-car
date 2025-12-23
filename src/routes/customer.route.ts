@@ -9,20 +9,20 @@ import {
   getAvailableSlotsForCar,
   createBookingForCustomer,
   getCustomerBookings,
-  getCustomerBookingById
-  ,cancelBookingByCustomer
+  getCustomerBookingById,
+  cancelBookingByCustomer,
 } from '../controllers/customer.controller'
 // import bookingController from "../controllers/booking.controller";
-import { requireAuth, requireRole } from '../middlewares/authMiddleware'
+// import { requireAuth, requireRole } from '../middlewares/authMiddleware'
 
 // Apply: all routes in this router require auth + customer role
-router.use(requireAuth, requireRole('customer'))
+// router.use(requireAuth, requireRole('customer'))
 
 /**
  * PROFILE
  */
-router.get('/me', getProfile )
-router.put('/me', updateProfile )
+router.get('/me', getProfile)
+router.put('/me', updateProfile)
 
 /**customer.route.ts
  * CARS (browse)
@@ -40,9 +40,8 @@ router.get('/cars/:carId/slots', getAvailableSlotsForCar)
  */
 router.post('/bookings', createBookingForCustomer)
 router.get('/bookings', getCustomerBookings)
-router.get("/bookings/:bookingId", getCustomerBookingById);
+router.get('/bookings/:bookingId', getCustomerBookingById)
 
-router.patch("/bookings/:bookingId/cancel", cancelBookingByCustomer);
-
+router.patch('/bookings/:bookingId/cancel', cancelBookingByCustomer)
 
 export default router

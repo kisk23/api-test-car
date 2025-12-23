@@ -2,7 +2,7 @@ import express from 'express'
 
 import { connectDB } from './configs/db'
 import { errorHandler } from './middlewares/error.handling'
-import authRoutes from './routes/auth.route' 
+import authRoutes from './routes/auth.route'
 
 import cookieParser from 'cookie-parser'
 
