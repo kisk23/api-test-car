@@ -40,6 +40,8 @@ export const updateDealerProfile = async (
 }
 
 export const createCarsService = async ({dealer: dealerId, ...car  }: Partial<CarDocument> ) => {
+
+  
   return await Car.create({
     ...car,
     dealer: dealerId,
