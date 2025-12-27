@@ -25,6 +25,7 @@ const CarSchema = new mongoose.Schema(
     },
 
     isActive: { type: Boolean, default: true },
+    features: { type: [String], default: [] },
   },
   { timestamps: true },
 )

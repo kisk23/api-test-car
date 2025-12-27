@@ -48,6 +48,10 @@ export const createCarsService = async ({
   return await Car.create({
     ...car,
     dealer: dealerId,
+
+    features: ["work", "climateControl", "leatherSeats", "cruiseControl", "rearViewCamera", "sunRoof", "heatedSeats", "infotainmentSystem", "blindSpotMonitoring", "laneDepartureWarning", "automaticEmergencyBraking", "forwardCollisionWarning", "driverAttentionMonitoring", " laneKeepingAssist", "adaptiveCruiseControl", "trafficSignRecognition", "autoHighBeam", "autoWipers", "360DegreeCamera", "parkingAssist", "semiAutonomousDriving", "autonomousDriving", "voiceControl", "smartphoneIntegration", "wirelessCharging", "heatedSteeringWheel", "ventilatedSeats", "massageSeats", "panoramicSunRoof", "powerTailgate", "powerFoldingSeats", "heatedMirrors", "autoDimmingMirrors", "rainSensingWipers", "headUpDisplay", "blindSpotMonitoring", "laneChangeWarning", "rearCrossTrafficAlert", "intelligentSpeedAssist", "smartKeylessEntry", "pushStartButton", "stopStartButton", "autoHold", "electricParkingBrake", "regenerativeBraking", "driverMonitoringSystem", "fatigueMonitoringSystem", "drowsinessMonitoringSystem", "eyeTrackingSystem", "driverAttentionSystem", "laneCenteringSystem", "adaptiveHeadlights", "autoEmergencyCalling", "emergencyCalling", "intelligentSpeedAssist", "smartKeylessEntry", "pushStartButton", "stopStartButton", "autoHold", "electricParkingBrake", "regenerativeBraking", "driverMonitoringSystem", "fatigueMonitoringSystem", "drowsinessMonitoringSystem", "eyeTrackingSystem", "driverAttentionSystem", "laneCenteringSystem", "adaptiveHeadlights", "autoEmergencyCalling", "emergencyCalling", "intelligentSpeedAssist", "smartKeylessEntry", "pushStartButton", "stopStartButton", "autoHold", "electricParkingBrake", "regenerativeBraking",],
+  
+
   })
 }
 export const updateCarService = async (
