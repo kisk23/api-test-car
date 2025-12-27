@@ -12,6 +12,7 @@ import {
 } from '../controllers/dealer.controller'
 import { requireAuth, requireRole } from '../middlewares/authMiddleware'
 import { listDealerBookings } from '../controllers/dealer.controller'
+import { getMyCars } from '../controllers/customer.controller'
 // // All dealer routes require dealer role
 router.use(requireAuth, requireRole('dealer'))
 
@@ -25,7 +26,10 @@ router.put('/me', updateProfile)
 
 // /**
 //  * Dealer car management
-//  */
+
+router.get('/me/cars', getMyCars)
+
+//  */ crud
 router.post('/cars', createCar)
 router.put('/cars/:carId', updateCar)
 router.delete('/cars/:carId', deleteCar)

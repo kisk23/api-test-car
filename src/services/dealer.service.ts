@@ -137,3 +137,7 @@ export const cancelBookingService = async ({
 
   return slot
 }
+
+export const getDealerCarsService = async (dealerId: string) => {
+  return await Car.find({ dealer: dealerId }).sort({ createdAt: -1 }).lean()
+}
