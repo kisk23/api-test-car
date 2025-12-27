@@ -1,4 +1,4 @@
-import { createCarSchema } from './../validations/carCreation';
+import { createCarSchema } from './../validations/carCreation'
 import { updateCarSchema } from '../validations/carUpdate'
 import { Request, Response, NextFunction } from 'express'
 import {
@@ -8,10 +8,11 @@ import {
   updateCarService,
   deleteCarService,
   createSlotService,
+  confirmBookingService,
+  listDealerBookingsService,
+  cancelBookingService,
 } from '../services/dealer.service'
 import { Types } from 'mongoose'
-
-
 
 // Controller to get the logged-in dealer's profile
 export const getProfile = async (
@@ -56,37 +57,34 @@ export const updateProfile = async (
   }
 }
 
-
-export const  createCar= async (
+export const createCar = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) : Promise<void> => {
+): Promise<void> => {
   try {
- 
-
     const dealerId = req.user?.userId
 
     if (!dealerId) {
       throw new Error('Dealer ID not found in token')
     }
-      const payload = createCarSchema.parse(req.body)
+    const payload = createCarSchema.parse(req.body)
 
     const car = await createCarsService({
       dealer: new Types.ObjectId(dealerId),
       ...payload,
-    }) 
+    })
 
     res.status(201).json(car)
   } catch (err) {
     next(err)
   }
 }
-export const updateCar= async (
+export const updateCar = async (
   req: Request,
   res: Response,
   next: NextFunction,
-)=> {
+) => {
   try {
     const { carId } = req.params
     const dealerId = req.user?.userId
@@ -101,10 +99,7 @@ export const updateCar= async (
 
     const payload = updateCarSchema.parse(req.body)
 
-    const updatedCar = await updateCarService(
-        carId,
-      payload,
-    )
+    const updatedCar = await updateCarService(carId, payload)
 
     if (!updatedCar) {
       return res.status(404).json({ message: 'Car not found' })
@@ -115,11 +110,11 @@ export const updateCar= async (
     next(err)
   }
 }
-export const deleteCar= async (
+export const deleteCar = async (
   req: Request,
   res: Response,
   next: NextFunction,
-)=> {
+) => {
   try {
     const { carId } = req.params
     const dealerId = req.user?.userId
@@ -132,9 +127,7 @@ export const deleteCar= async (
       throw new Error('Invalid car ID')
     }
 
-    const deletedCar = await deleteCarService(
-      carId
-    )
+    const deletedCar = await deleteCarService(carId)
 
     if (!deletedCar) {
       throw new Error('Car not found')
@@ -142,9 +135,9 @@ export const deleteCar= async (
 
     res.json(deletedCar)
   } catch (err) {
-    next(err) 
-    }
-    }
+    next(err)
+  }
+}
 
 export const createSlot = async (
   req: Request,
@@ -172,6 +165,66 @@ export const createSlot = async (
     })
 
     res.status(201).json(slot)
+  } catch (err) {
+    next(err)
+  }
+}
+
+/// Controller to list all bookings for the logged-in dealer
+export const listDealerBookings = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const dealerId = req.user!.userId
+
+    const bookings = await listDealerBookingsService(dealerId)
+
+    res.status(200).json({
+      count: bookings.length,
+      bookings,
+    })
+  } catch (err) {
+    next(err)
+  }
+}
+/// Controller to confirm a booking for the logged-in dealer
+export const confirmBooking = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const dealerId = req.user!.userId
+    const { availabilityId } = req.params
+
+    const slot = await confirmBookingService({
+      availabilityId,
+      dealerId,
+    })
+
+    res.status(200).json(slot)
+  } catch (err) {
+    next(err)
+  }
+}
+/// Controller to cancel a booking for the logged-in dealer
+export const cancelBooking = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const dealerId = req.user!.userId
+    const { availabilityId } = req.params
+
+    const slot = await cancelBookingService({
+      availabilityId,
+      dealerId,
+    })
+
+    res.status(200).json(slot)
   } catch (err) {
     next(err)
   }

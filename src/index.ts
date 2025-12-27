@@ -2,7 +2,7 @@ import express from 'express'
 
 import { connectDB } from './configs/db'
 import { errorHandler } from './middlewares/error.handling'
-import authRoutes from './routes/auth.route' 
+import authRoutes from './routes/auth.route'
 
 import cookieParser from 'cookie-parser'
 
@@ -14,7 +14,12 @@ process.loadEnvFile('.env')
 const app = express()
 const PORT = process.env.PORT || 4000
 import cors from 'cors'
-app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+  }),
+)
 app.use(cookieParser())
 
 app.use(express.json())
