@@ -16,13 +16,16 @@ const PORT = process.env.PORT || 4000
 import cors from 'cors'
 app.use(
   cors({
-    origin: 'http://localhost:3000',
+    origin: ['http://localhost:3000', 'http://localhost:5000'],
     credentials: true,
   }),
 )
 app.use(cookieParser())
 
 app.use(express.json())
+
+// Serve static files from public directory
+app.use(express.static('public'))
 
 app.use('/auth', authRoutes)
 app.use('/customer', customerRoutes)

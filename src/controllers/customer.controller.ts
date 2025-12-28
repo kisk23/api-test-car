@@ -1,3 +1,4 @@
+import { getCarAvailabilityForDate } from './../services/availbility.service';
 import { Request, Response, NextFunction } from 'express'
 import {
   getCustomerProfile,
@@ -205,6 +206,58 @@ export const getMyCars = async (
   }
 }
 
+export const getCarAvailabilityForSpecificDate = async (req: Request, res: Response) => {
+  const { carId } = req.params
+  const { date } = req.query
+
+  if (!date) return res.status(400).json({ message: 'date required' })
+
+  const slots = await getCarAvailabilityForDate(
+    carId,
+    date as string
+  )
+
+  res.json(slots)
+}
+
+const bookCarForSpecificDateTime = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { carId } = req.params
+    const { date, time } = req.body
+    const customerId = req.user?.userId
+
+    if (!customerId) {
+      return res.status(401).json({ message: 'User not authenticated' })
+    }
+
+    if (!date || !time) {
+      return res.status(400).json({ message: 'date and time are required' })
+    }
+
+    const { bookCarForDateTime } = await import('../services/booking.service')
+    
+    const booking = await bookCarForDateTime({
+      carId,
+      customerId,
+      date,
+      time,
+    })
+
+    res.status(201).json({
+      message: 'Car booked successfully for the specified time',
+      booking,
+    })
+  } catch (error: unknown) {
+    next(error)
+  }
+}
+
+
+
 export {
   getProfile,
   updateProfile,
@@ -215,4 +268,8 @@ export {
   getCustomerBookings,
   getCustomerBookingById,
   cancelBookingByCustomer,
+  bookCarForSpecificDateTime,
+  
+
 }
+

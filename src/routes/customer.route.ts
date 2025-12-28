@@ -11,37 +11,31 @@ import {
   getCustomerBookings,
   getCustomerBookingById,
   cancelBookingByCustomer,
+  getCarAvailabilityForSpecificDate,
+  bookCarForSpecificDateTime,
 } from '../controllers/customer.controller'
-// import bookingController from "../controllers/booking.controller";
-// import { requireAuth, requireRole } from '../middlewares/authMiddleware'
-
-// Apply: all routes in this router require auth + customer role
-// router.use(requireAuth, requireRole('customer'))
+import { requireAuth, requireRole } from '../middlewares/authMiddleware'
 
 /**
- * PROFILE
- */
-router.get('/me', getProfile)
-router.put('/me', updateProfile)
-
-/**customer.route.ts
- * CARS (browse)
+ * PUBLIC ROUTES (no authentication required)
  */
 router.get('/cars', listCars) // query: brand, model, year, dealer, page, limit
 router.get('/cars/:carId', getCarDetails)
+router.get('/cars/:carId/availability', getCarAvailabilityForSpecificDate)
 
 /**
- * AVAILABILITY
+ * PROTECTED ROUTES (authentication required)
  */
-router.get('/cars/:carId/slots', getAvailableSlotsForCar)
 
-/**
- * BOOKINGS (customer-side)
- */
-router.post('/bookings', createBookingForCustomer)
-router.get('/bookings', getCustomerBookings)
-router.get('/bookings/:bookingId', getCustomerBookingById)
+// Profile routes
+router.get('/me', requireAuth, requireRole('customer'), getProfile)
+router.put('/me', requireAuth, requireRole('customer'), updateProfile)
 
-router.patch('/bookings/:bookingId/cancel', cancelBookingByCustomer)
+// Booking routes
+router.post('/cars/:carId/book', requireAuth, requireRole('customer'), bookCarForSpecificDateTime)
+router.post('/bookings', requireAuth, requireRole('customer'), createBookingForCustomer)
+router.get('/bookings', requireAuth, requireRole('customer'), getCustomerBookings)
+router.get('/bookings/:bookingId', requireAuth, requireRole('customer'), getCustomerBookingById)
+router.patch('/bookings/:bookingId/cancel', requireAuth, requireRole('customer'), cancelBookingByCustomer)
 
 export default router

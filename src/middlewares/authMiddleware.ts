@@ -9,13 +9,20 @@ export interface JwtPayload {
   exp?: number
 }
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
-  const authHeader = req.headers.authorization
-
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return unauthorized(res)
+  // Try to get token from cookie first, then from Authorization header
+  let token = req.cookies?.token;
+  
+  // If no cookie, check Authorization header
+  if (!token) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.split(' ')[1];
+    }
   }
 
-  const token = authHeader.split(' ')[1]
+  if (!token) {
+    return unauthorized(res, 'No authentication token provided');
+  }
 
   try {
     const decoded = jwt.verify(
