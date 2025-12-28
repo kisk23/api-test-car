@@ -7,8 +7,6 @@ import {
   createCar,
   updateCar,
   deleteCar,
-  confirmBooking,
-  cancelBooking,
 } from '../controllers/dealer.controller'
 import { requireAuth, requireRole } from '../middlewares/authMiddleware'
 import { listDealerBookings } from '../controllers/dealer.controller'
@@ -41,7 +39,5 @@ router.delete('/cars/:carId', deleteCar)
 //to do until we have a booking system fronted
 
 router.get('/bookings', listDealerBookings)
-router.patch('/bookings/:bookingId/confirm', confirmBooking)
-router.patch('/bookings/:bookingId/cancel', cancelBooking)
 
 export default router
