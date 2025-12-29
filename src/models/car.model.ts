@@ -14,7 +14,7 @@ const CarSchema = new mongoose.Schema(
     year: { type: Number, required: true },
     price: Number,
 
-    images: {type:[String],default:[]},
+    images: { type: [String], default: [] },
 
     specs: {
       engine: String,
@@ -22,6 +22,10 @@ const CarSchema = new mongoose.Schema(
       fuelType: String,
       horsepower: Number,
       color: String,
+      acceleration: Number,
+      torque: Number,
+      drivetrain: String,
+      cartype: String,
     },
 
     isActive: { type: Boolean, default: true },
