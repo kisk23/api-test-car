@@ -6,7 +6,7 @@ import {
   updateProfile,
   listCars,
   getCarDetails,
-  getAvailableSlotsForCar,
+  
   createBookingForCustomer,
   getCustomerBookings,
   getCustomerBookingById,

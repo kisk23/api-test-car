@@ -4,11 +4,13 @@ export type UserRole = "customer" | "dealer" | "admin";
 export interface JwtPayload {
   userId: string
   email: string
-  role: 'user' | 'admin' | 'dealer'
+  role: 'customer' | 'admin' | 'dealer'
   iat?: number
   exp?: number
 }
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
+   console.log("🍪 Cookies:", req.cookies);
+  console.log("🔐 Auth header:", req.headers.authorization);
   // Try to get token from cookie first, then from Authorization header
   let token = req.cookies?.token;
   

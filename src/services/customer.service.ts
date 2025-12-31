@@ -20,14 +20,22 @@ const updateCustomerProfile = async (
   return updatedCustomer
 }
 
+
+
  const fetchCustomerBookings = async (customerId: string) => {
+  // 1. Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(customerId)) {
     throw new Error('Invalid customerId')
   }
 
+  // 2. Fetch only confirmed bookings
   const bookings = await Availability.find({
     bookedBy: customerId,
+    isBooked: true,
   })
+    .select(
+      'startTime endTime status car dealer createdAt'
+    )
     .populate('car', 'name model')
     .populate('dealer', 'name')
     .sort({ startTime: -1 })
