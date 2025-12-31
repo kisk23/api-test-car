@@ -20,9 +20,7 @@ const updateCustomerProfile = async (
   return updatedCustomer
 }
 
-
-
- const fetchCustomerBookings = async (customerId: string) => {
+const fetchCustomerBookings = async (customerId: string) => {
   // 1. Validate ObjectId
   if (!mongoose.Types.ObjectId.isValid(customerId)) {
     throw new Error('Invalid customerId')
@@ -33,10 +31,8 @@ const updateCustomerProfile = async (
     bookedBy: customerId,
     isBooked: true,
   })
-    .select(
-      'startTime endTime status car dealer createdAt'
-    )
-    .populate('car', 'name model')
+    .select('startTime endTime status car dealer createdAt')
+    .populate('car', 'brand model')
     .populate('dealer', 'name')
     .sort({ startTime: -1 })
     .lean()
@@ -56,4 +52,9 @@ const fetchBookingById = async (bookingId: string) => {
   return booking
 }
 
-export { getCustomerProfile, updateCustomerProfile, fetchCustomerBookings, fetchBookingById }
+export {
+  getCustomerProfile,
+  updateCustomerProfile,
+  fetchCustomerBookings,
+  fetchBookingById,
+}
