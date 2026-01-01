@@ -26,7 +26,7 @@ export const updateCarSchema = z
       drivetrain: z.string().trim().optional(),
       cartype: z.string().trim().optional(),
     }),
-
+    features: z.array(z.string().trim()).optional(),
     isActive: z.boolean(),
   })
   .strict()

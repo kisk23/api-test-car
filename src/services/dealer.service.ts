@@ -46,21 +46,7 @@ export const createCarsService = async ({
   return await Car.create({
     ...car,
     dealer: dealerId,
-
-    features: [
-      'work',
-      'climateControl',
-      'leatherSeats',
-      'cruiseControl',
-      'rearViewCamera',
-      'sunRoof',
-      'heatedSeats',
-      'infotainmentSystem',
-      'blindSpotMonitoring',
-      'laneDepartureWarning',
-      'automaticEmergencyBraking',
-      'forwardCollisionWarning',
-    ],
+    features: car.features || [],
   })
 }
 export const updateCarService = async (
