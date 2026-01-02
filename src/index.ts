@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser'
 
 import customerRoutes from './routes/customer.route'
 import dealerRoutes from './routes/dealer.route'
+import swaggerUi from 'swagger-ui-express'
+import swaggerDocument from './swagger.json'
 
 process.loadEnvFile('.env')
 
@@ -31,9 +33,9 @@ app.use('/auth', authRoutes)
 app.use('/customer', customerRoutes)
 app.use('/dealer', dealerRoutes)
 
-import swaggerUi from 'swagger-ui-express'
-import swaggerDocument from './swagger.json'
-
+app.use('/health', (req, res) => {
+  res.status(200).send('OK')
+})
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use(errorHandler)
