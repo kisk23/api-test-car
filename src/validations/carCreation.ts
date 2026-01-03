@@ -15,7 +15,7 @@ export const createCarSchema = z
     price: z.number().positive().optional(),
 
     images: z.array(z.string().url()).optional(),
-
+    features: z.array(z.string()).optional().default([]),
     specs: z
       .object({
         engine: z.string().trim().optional(),
