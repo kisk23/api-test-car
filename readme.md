@@ -1,205 +1,156 @@
-rotate refresh token .........> todo 
+# API Test Car
 
+Small Node.js/TypeScript REST API for testing car/customer/dealer endpoints.
 
-1. Profile Management
-Needed endpoints:
+# 🚗 API Test Car
 
-GET /users/me
-Return user profile: name, phone, email, role, dealership info (if dealer).
+[![Node.js CI](https://img.shields.io/badge/node-%3E%3D18-brightgreen)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-PATCH /users/me
-Update:
+A small, well-structured Node.js + TypeScript REST API used for testing and demonstrating car/customer/dealer endpoints.
 
-name
+---
 
-phone
+## ✨ Features
 
-timezone
+- TypeScript + Express server scaffold
+- Authentication (JWT + refresh tokens)
+- Customer and Dealer resources with controllers, services and validation
+- Organized project layout for rapid development and testing
+- Optional Swagger/OpenAPI spec at `swagger.json`
 
-avatar
+## 📚 Table of Contents
 
-dealershipName / dealershipLocation (dealer only)
+- [Quick Start](#-quick-start)
+- [Environment](#-environment)
+- [Scripts](#-scripts)
+- [Project Layout](#-project-layout)
+- [API Overview](#-api-overview)
+- [Examples](#-examples)
+- [Development](#-development)
+- [Testing](#-testing)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Why you need it:
+---
 
-User must manage their data before booking test drives.
+## 🚀 Quick Start
 
-2. User → Car Browsing History / Favorites (optional but common)
+1. Install dependencies
 
-Not required, but almost every booking platform supports:
+```bash
+npm install
+```
 
-POST /users/me/favorites/:carId
+2. Create your `.env` (see the sample below) and start the server in development
 
-DELETE /users/me/favorites/:carId
+```bash
+npm run dev
+```
 
-GET /users/me/favorites
+Build and run in production mode:
 
-Useful for frontend UX.
+```bash
+npm run build
+npm start
+```
 
-3. User → Booking (Rent/Test-Drive) Logic
+---
 
-THIS is what you were asking for.
+## 🔧 Environment (example)
 
-A user must be able to:
+Create a `.env` at the project root with at least the following keys:
 
-Browse cars (GET /cars)
+```env
+PORT=3000
+DATABASE_URL=postgres://user:pass@localhost:5432/dbname
+JWT_SECRET=your_jwt_secret_here
+REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
+```
 
-View availability (GET /cars/:id/availability)
+Adjust DB configuration to match your database provider.
 
-Create booking (POST /bookings)
+---
 
-Modify booking (PATCH /bookings/:id)
+## 🧭 Scripts
 
-Cancel booking (DELETE /bookings/:id)
+- `npm run dev` — start in development (with ts-node / nodemon)
+- `npm run build` — compile TypeScript to `dist/`
+- `npm start` — run the compiled production build
 
-View all their bookings (GET /users/me/bookings)
+Check `package.json` for exact script definitions.
 
-So your user.service needs functions like:
-getUserBookings(userId: string)
-createBooking(userId: string, carId: string, slotStart: Date, slotEnd: Date)
-cancelBooking(userId: string, bookingId: string)
-updateBooking(userId: string, bookingId: string, newSlot: {...})
+---
 
+## 🗂 Project Layout
 
-(Business rules below ⬇️)
+- `src/`
+  - `index.ts` — server entry point
+  - `controllers/` — request handlers
+  - `routes/` — express routes
+  - `services/` — business logic
+  - `models/` — data models
+  - `middlewares/` — Express middleware (auth, error handling)
+  - `validations/` — validation schemas
+- `public/` — static files (e.g., `booking.html`)
+- `scripts/` — helper/test scripts
+- `swagger.json` — OpenAPI spec (if available)
 
-4. Dealer-Specific User Logic
+---
 
-If user.role === "dealer", they must be able to:
+## 📡 API Overview
 
-Add car
+- Auth: `/auth` (login, register, refresh)
+- Customers: `/customers` — customer CRUD and queries
+- Dealers: `/dealers` — dealer CRUD and queries
 
-Remove car
+For exact routes and payloads, see the route files in `src/routes/` and controllers in `src/controllers/`.
 
-Edit car details
+---
 
-Set availability slots
+## 📘 Examples
 
-View all bookings for their cars
+Authenticate and call a protected endpoint (example using `curl`):
 
-Approve / Decline bookings (optional workflow)
+```bash
+# Login to receive access token
+curl -X POST http://localhost:3000/auth/login -H "Content-Type: application/json" -d '{"email":"user@example.com","password":"secret"}'
 
-Endpoints needed:
+# Use token to list customers
+curl http://localhost:3000/customers -H "Authorization: Bearer <ACCESS_TOKEN>"
+```
 
-POST   /dealer/cars
-PATCH  /dealer/cars/:carId
-DELETE /dealer/cars/:carId
-POST   /dealer/cars/:carId/availability
-GET    /dealer/bookings
-PATCH  /dealer/bookings/:bookingId/status
+---
 
-5. Admin User Logic
+## 🧪 Testing & Scripts
 
-Admin must be able to:
+- Small test scripts are available in `scripts/` (e.g., `test-customer-routes.ts`). Run via `node` or `ts-node` depending on your setup.
 
-List users
+---
 
-Change user role
+## 🛠 Development Notes
 
-Deactivate user
+- Linting / formatting: check `package.json` for any configured tools
+- API spec: `swagger.json` can be used to generate docs or import into Postman
 
-See system stats (cars, dealers, bookings)
+---
 
-Endpoints:
+## 🤝 Contributing
 
-GET    /admin/users
-PATCH  /admin/users/:id/role
-PATCH  /admin/users/:id/deactivate
-GET    /admin/stats
+Contributions are welcome. Open an issue or a PR with a clear description and tests where applicable.
 
-6. User Ratings & Test-Drive Feedback
+---
 
-After driving, user should be able to:
+## 📜 License
 
-Rate the car or dealer
+This project is licensed under the MIT License.
 
-Leave feedback
+---
 
-Endpoints:
+If you'd like, I can also:
 
-POST /bookings/:id/review
-GET  /cars/:id/reviews
+- Add an example `.env.example`
+- Generate a Postman collection
+- Add endpoint examples for each route
 
-7. Notifications (Email/SMS)
-
-You must implement for the user:
-
-receive booking confirmation
-
-receive cancellation notice
-
-reminders before test drive
-
-dealer confirmation or rejection
-
-Service functions:
-
-sendBookingConfirmation(user, booking)
-sendBookingReminder(user, booking)
-sendBookingCancelled(user, booking)
-
-8. User Status Control
-
-Useful business logic:
-
-deactivate account
-
-delete account
-
-update lastLoginAt
-
-verify email/phone (optional)
-
-Endpoints:
-
-DELETE /users/me   → delete account
-PATCH  /users/me/deactivate
-
-9. User Analytics / Dashboard Data
-
-For customer dashboard:
-
-Number of completed bookings
-
-Upcoming bookings
-
-Last visited dealership
-
-Recently viewed cars
-
-Service functions:
-
-getUserDashboardStats(userId)
-
-SUMMARY — What you actually need to add
-Required
-Customer
-
-✔ Profile update
-✔ View cars
-✔ View availability
-✔ Create booking
-✔ Modify booking
-✔ Cancel booking
-✔ View their bookings
-✔ Leave review
-
-Dealer
-
-✔ Add/edit/delete cars
-✔ Set availability
-✔ View bookings for their cars
-✔ Approve/decline
-✔ View stats
-
-Admin
-
-✔ Manage users
-✔ Manage dealers
-✔ View platform stats
-
-Shared
-
-✔ Notifications
-✔ Account deactivation
-✔ Dashboard stats
+Enjoy! ✨
