@@ -51,7 +51,9 @@ export const listCarsForCustomers = async (
 
   const [cars, total] = await Promise.all([
     Car.find(filter)
-      .select('_id brand model year price images specs dealer createdAt')
+      .select(
+        '_id brand model year price images specs features dealer createdAt',
+      )
       .populate('dealer', 'name dealershipName dealershipLocation')
       .sort({ createdAt: -1 })
       .skip(skip)
